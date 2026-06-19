@@ -1,2 +1,2 @@
 [all]
-<addresse_ip_instance_aws> ansible_ssh_user=ubuntu
+54.242.221.254 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=~/.ssh/aws_openclassrooms_edo_p5.pem

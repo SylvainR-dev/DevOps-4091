@@ -1,13 +1,42 @@
 ---
 - name: Openclassrooms P5 EDO deployment
   hosts: all
+  become: true
 
   tasks:
-    # Implémenter ici les tâches:
-    # - d'installation de Nginx;
-    # - d'installation de l'application Angular (voir répertoire ./app);
-    # - de configuration du serveur Nginx pour servir l'application Angular
+    - name: Installer Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Créer le répertoire de l'application
+      file:
+        path: /var/www/html/olympic-games-starter
+        state: directory
+        mode: '0755'
+
+    - name: Copier les fichiers de l'application Angular
+      copy:
+        src: app/olympic-games-starter/
+        dest: /var/www/html/olympic-games-starter/
+        mode: '0644'
+
+    - name: Copier la configuration Nginx
+      copy:
+        src: nginx/app.conf
+        dest: /etc/nginx/sites-available/olympic-games-starter
+      notify: Redémarrer Nginx
+
+    - name: Activer la configuration Nginx
+      file:
+        src: /etc/nginx/sites-available/olympic-games-starter
+        dest: /etc/nginx/sites-enabled/olympic-games-starter
+        state: link
+      notify: Redémarrer Nginx
 
   handlers:
-    # Implémenter ici le handler redémarrant automatiquement le serveur Nginx lorsque le playbook
-    # opère une modification de la configuration du serveur.
+    - name: Redémarrer Nginx
+      service:
+        name: nginx
+        state: restarted
