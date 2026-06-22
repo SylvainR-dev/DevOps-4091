@@ -24,6 +24,29 @@ resource "aws_opensearch_domain" "openclassrooms-p8" {
     volume_size = 10
   }
 
+  access_policies = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect    = "Allow"
+        Principal = { AWS = "arn:aws:iam::476646938402:root" }
+        Action    = "es:*"
+        Resource  = "arn:aws:es:us-east-1:476646938402:domain/openclassrooms-p5-edo/*"
+      },
+      {
+        Effect    = "Allow"
+        Principal = { AWS = "*" }
+        Action    = "es:*"
+        Resource  = "arn:aws:es:us-east-1:476646938402:domain/openclassrooms-p5-edo/*"
+        Condition = {
+          IpAddress = {
+            "aws:SourceIp" = ["2a01:cb18:8622:f300:6a07:5446:8958:b3a1/128"]
+          }
+        }
+      }
+    ]
+  })
+
   tags = {
     Domain = "OpenClassrooms_P5_EDO"
   }
