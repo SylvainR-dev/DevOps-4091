@@ -8,6 +8,10 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
+
+
+
+
 provider "aws" {
   region = "us-east-1"
 }
@@ -23,6 +27,9 @@ resource "aws_instance" "my_server" {
   vpc_security_group_ids = ["${aws_security_group.my_security_group.id}"]
   key_name               = aws_key_pair.generated_key.key_name
 }
+
+
+
 
 resource "aws_security_group" "my_security_group" {
   name = "allow-ssh"
